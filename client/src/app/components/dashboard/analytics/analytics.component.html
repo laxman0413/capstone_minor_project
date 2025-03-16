@@ -1,0 +1,119 @@
+<div class="analytics-container animate-fade-in">
+  <div class="section-header">
+    <h1><i class="fas fa-chart-line"></i> Analytics Dashboard</h1>
+    <button class="btn refresh-btn" (click)="refreshData()" [disabled]="loading">
+      <i class="fas fa-sync-alt" [class.fa-spin]="loading"></i> Refresh Data
+    </button>
+  </div>
+
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+    </div>
+    <p>Loading analytics data...</p>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="error && !loading" class="error-container">
+    <i class="fas fa-exclamation-triangle"></i>
+    <p>{{ error }}</p>
+    <button class="btn btn-primary" (click)="refreshData()">Try Again</button>
+  </div>
+
+  <!-- Content when data is available -->
+  <div *ngIf="metrics && !loading" class="analytics-content">
+    <!-- Summary cards -->
+    <div class="summary-cards">
+      <div class="summary-card">
+        <div class="card-icon">
+          <i class="fas fa-file-alt"></i>
+        </div>
+        <div class="card-content">
+          <h3>Total Documents</h3>
+          <p class="card-value">{{ metrics.totalDocuments }}</p>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="card-icon">
+          <i class="fas fa-calendar-alt"></i>
+        </div>
+        <div class="card-content">
+          <h3>This Month</h3>
+          <p class="card-value">{{ metrics.documentsThisMonth }}</p>
+        </div>
+      </div>
+
+      
+
+      
+    </div>
+
+    <!-- Charts section -->
+    <div class="charts-container">
+      <div class="chart-card">
+        <h3>Document Types</h3>
+        <div class="chart-container">
+          <canvas id="documentTypeChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3>Processing Trend</h3>
+        <div class="chart-container">
+          <canvas id="documentTrendChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Detailed metrics -->
+    <div class="metrics-details">
+      <h2>Usage Details</h2>
+      
+      <div class="metrics-table-container">
+        <table class="metrics-table">
+          <thead>
+            <tr>
+              <th>Document Type</th>
+              <th>Count</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><i class="fas fa-id-card text-primary"></i> Adhaar</td>
+              <td>{{ metrics.documentsProcessed.adhaar }}</td>
+              <td>{{ metrics.totalDocuments ? (metrics.documentsProcessed.adhaar / metrics.totalDocuments * 100).toFixed(1) : 0 }}%</td>
+            </tr>
+            <tr>
+              <td><i class="fas fa-address-card text-danger"></i> PAN</td>
+              <td>{{ metrics.documentsProcessed.pan }}</td>
+              <td>{{ metrics.totalDocuments ? (metrics.documentsProcessed.pan / metrics.totalDocuments * 100).toFixed(1) : 0 }}%</td>
+            </tr>
+            <tr>
+              <td><i class="fas fa-car text-warning"></i> Driving License</td>
+              <td>{{ metrics.documentsProcessed.driving_license }}</td>
+              <td>{{ metrics.totalDocuments ? (metrics.documentsProcessed.driving_license / metrics.totalDocuments * 100).toFixed(1) : 0 }}%</td>
+            </tr>
+            <tr>
+              <td><i class="fas fa-file text-info"></i> Other</td>
+              <td>{{ metrics.documentsProcessed.other }}</td>
+              <td>{{ metrics.totalDocuments ? (metrics.documentsProcessed.other / metrics.totalDocuments * 100).toFixed(1) : 0 }}%</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td><strong>Total</strong></td>
+              <td><strong>{{ metrics.totalDocuments }}</strong></td>
+              <td><strong>100%</strong></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      
+      
+    </div>
+  </div>
+</div> 

@@ -1,0 +1,129 @@
+<div class="documents-container ">
+  <div class="section-header">
+    <div class="section-title">
+      <i class="fas fa-file-alt"></i>
+      <h2>Your Documents</h2>
+    </div>
+    <button class="btn btn-primary upload-btn" routerLink="/upload">
+      <i class="fas fa-upload"></i> Upload Document
+    </button>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <h3>Loading ...</h3>
+      <p>{{ loadingMessage }}</p>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading && documents.length === 0">
+    <div class="empty-icon">
+      <i class="fas fa-folder-open"></i>
+    </div>
+    <h3>No documents yet</h3>
+    <p>Upload your first document to get started with secure document management.</p>
+    <button class="btn btn-primary" routerLink="/upload">
+      <i class="fas fa-upload"></i> Upload Now
+    </button>
+  </div>
+
+  <!-- Document List -->
+  <div class="document-list" *ngIf=" documents.length > 0">
+    <div class="document-list-header">
+      <div class="document-count">
+        <span>{{ documents.length }} {{ documents.length === 1 ? 'document' : 'documents' }}</span>
+      </div>
+      <div class="pagination-controls">
+        <button class="btn btn-icon" (click)="prevPage()" [disabled]="currentPage === 1" title="Previous page">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+        <button class="btn btn-icon" (click)="nextPage()" [disabled]="currentPage === totalPages" title="Next page">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="document-cards">
+      <div class="document-card" *ngFor="let doc of paginatedDocuments">
+        <div class="document-card-header">
+          <div class="document-type-badge" [class]="doc.documentType">
+            {{ doc.documentType }}
+          </div>
+          <div class="document-menu">
+            <button class="btn-icon" (click)="showDocumentActions(doc)">
+              <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <div class="document-actions" *ngIf="doc.showActions">
+              <button class="action-btn preview-btn" (click)="openPreviewDialog(doc.maskedFileName)">
+                <i class="fas fa-eye"></i> Preview
+              </button>
+              <button class="action-btn download-btn" (click)="downloadFile(doc.maskedFileName)">
+                <i class="fas fa-download"></i> Download
+              </button>
+              <button class="action-btn delete-btn" (click)="deleteFile(doc.maskedFileName)">
+                <i class="fas fa-trash-alt"></i> Delete
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="document-card-body" (click)="openPreviewDialog(doc.maskedFileName)">
+          <div class="document-icon">
+            <i class="fas fa-file-image"></i>
+          </div>
+          <div class="document-info">
+            <h3 class="document-name">{{ doc.originalName }}</h3>
+            <p class="document-date">
+              <i class="fas fa-calendar-alt"></i>
+              {{ doc.uploadedAt | date:'medium' }}
+            </p>
+          </div>
+        </div>
+        
+        <div class="document-card-footer">
+          <button class="btn btn-sm preview-btn" (click)="openPreviewDialog(doc.maskedFileName)">
+            <i class="fas fa-eye"></i> View
+          </button>
+          <button class="btn btn-sm download-btn" (click)="downloadFile(doc.maskedFileName)">
+            <i class="fas fa-download"></i> Download
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Preview Dialog -->
+<div class="dialog-overlay" *ngIf="showPreview" (click)="closePreviewDialog($event)">
+  <div class="dialog-content" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <h3>{{ previewTitle }}</h3>
+      <button class="btn-icon close-btn" (click)="closePreviewDialog($event)">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="dialog-body">
+      <div *ngIf="filePreviewURL" class="file-preview">
+        <img [src]="filePreviewURL" alt="Document Preview" class="preview-image">
+      </div>
+      <div *ngIf="!filePreviewURL" class="loading-preview">
+        <div class="spinner"></div>
+        <p>Loading preview...</p>
+      </div>
+    </div>
+    
+    <div class="dialog-footer">
+      <button class="btn btn-primary" (click)="downloadFile(selectedFile)" *ngIf="selectedFile">
+        <i class="fas fa-download"></i> Download
+      </button>
+      <button class="btn btn-outline" (click)="closePreviewDialog($event)">
+        <i class="fas fa-times"></i> Close
+      </button>
+    </div>
+  </div>
+</div>

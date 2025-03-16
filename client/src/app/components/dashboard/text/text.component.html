@@ -1,0 +1,169 @@
+<div class="text-dashboard">
+  <div class="section-header">
+    <h2 class="section-title">
+      <i class="fas fa-envelope-open-text"></i> Encrypted Messages
+    </h2>
+    <button class="btn btn-primary" (click)="openEncryption()">
+      <i class="fas fa-lock"></i> Encrypt New Message
+    </button>
+  </div>
+
+  <!-- Shared With Me Section -->
+  <div class="panel ">
+    <div class="panel-header">
+      <div class="panel-title">
+        <i class="fas fa-inbox"></i>
+        <h3>Shared With Me</h3>
+        <span class="badge" *ngIf="sharedWithMe.length > 0">{{ sharedWithMe.length }}</span>
+      </div>
+      <div class="pagination" *ngIf="sharedWithMe.length > 0">
+        <button class="btn btn-icon" (click)="updateSharedWithMePage(-1)" [disabled]="sharedWithMeCurrentPage === 1" title="Previous page">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <span class="page-info">{{ sharedWithMeCurrentPage }} / {{ Math.ceil(sharedWithMe.length / itemsPerPage) }}</span>
+        <button class="btn btn-icon" (click)="updateSharedWithMePage(1)" [disabled]="sharedWithMeCurrentPage * itemsPerPage >= sharedWithMe.length" title="Next page">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="sharedWithMe.length === 0 && !loadingSharedWithMe">
+      <div class="empty-icon">
+        <i class="fas fa-inbox"></i>
+      </div>
+      <h4>No messages yet</h4>
+      <p>When others share encrypted messages with you, they will appear here.</p>
+    </div>
+    
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="loadingSharedWithMe">
+      <div class="spinner"></div>
+      <p>Loading messages...</p>
+    </div>
+
+    <!-- Message List -->
+    <ul class="message-list" *ngIf="sharedWithMe.length > 0 && !loadingSharedWithMe">
+      <li class="message-item" *ngFor="let item of getPaginatedSharedWithMe()">
+        <div class="message-card">
+          <div class="message-header">
+            <div class="sender-info">
+              <div class="avatar">
+                {{ getUserInitials(item.userId.name) }}
+              </div>
+              <div class="sender-details">
+                <h4 class="sender-name">{{ item.userId.name || 'Unknown User' }}</h4>
+                <p class="message-date">
+                  <i class="fas fa-clock"></i> {{ formatDate(item.createdAt) }}
+                </p>
+              </div>
+            </div>
+            <div class="message-status">
+              <span class="status-badge" [class.unread]="!item.read">
+                {{ item.read ? 'Read' : 'New' }}
+              </span>
+            </div>
+          </div>
+          
+          <div class="message-body">
+            <div class="encrypted-content">
+              <i class="encrypted-icon"></i>
+              <p class="encrypted-text">This message is encrypted. Click to decrypt and view the contents.</p>
+            </div>
+          </div>
+          
+          <div class="message-footer">
+            <button class="btn btn-primary decrypt-btn" (click)="decrypt(item._id)" [disabled]="loadingSharedWithMe">
+              <i class="fas fa-unlock"></i> Decrypt Message
+            </button>
+            <button class="btn btn-outline delete-btn" (click)="deleteText(item._id, 'received')" [disabled]="loadingSharedWithMe">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+          <div class="result-box" *ngIf="decryptedMessages[item._id]">
+            <p><strong>Decrypted Text:</strong> {{ decryptedMessages[item._id] }}</p>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Shared By Me Section -->
+  <div class="panel" >
+    <div class="panel-header">
+      <div class="panel-title">
+        <i class="fas fa-paper-plane"></i>
+        <h3>Shared By Me</h3>
+        <span class="badge" *ngIf="sharedByMe.length > 0">{{ sharedByMe.length }}</span>
+      </div>
+      <div class="pagination" *ngIf="sharedByMe.length > 0">
+        <button class="btn btn-icon" (click)="updateSharedByMePage(-1)" [disabled]="sharedByMeCurrentPage === 1" title="Previous page">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <span class="page-info">{{ sharedByMeCurrentPage }} / {{ Math.ceil(sharedByMe.length / itemsPerPage) }}</span>
+        <button class="btn btn-icon" (click)="updateSharedByMePage(1)" [disabled]="sharedByMeCurrentPage * itemsPerPage >= sharedByMe.length" title="Next page">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="sharedByMe.length === 0 && !loadingSharedByMe">
+      <div class="empty-icon">
+        <i class="fas fa-paper-plane"></i>
+      </div>
+      <h4>No sent messages</h4>
+      <p>Messages you have encrypted and shared with others will appear here.</p>
+      <button class="btn btn-primary" (click)="openEncryption()">
+        <i class="fas fa-lock"></i> Encrypt New Message
+      </button>
+    </div>
+    
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="loadingSharedByMe">
+      <div class="spinner"></div>
+      <p>Loading messages...</p>
+    </div>
+
+    <!-- Message List -->
+    <ul class="message-list" *ngIf="sharedByMe.length > 0 && !loadingSharedByMe">
+      <li class="message-item" *ngFor="let item of getPaginatedSharedByMe()">
+        <div class="message-card">
+          <div class="message-header">
+            <div class="sent-info">
+              <i class="fas fa-share-alt sent-icon"></i>
+              <div class="sent-date">
+                <p>Shared on {{ formatDate(item.createdAt) }}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="message-body">
+            <div class="encrypted-content">
+              <i class=" encrypted-icon"></i>
+              <p class="encrypted-preview">Encrypted message shared with {{ item.receivers?.length || 0 }} recipient(s)</p>
+            </div>
+            
+            <div class="receivers-list">
+              <h4>Shared with:</h4>
+              <ul class="receivers">
+                <li class="receiver" *ngFor="let receiver of item.receivers">
+                  <div class="avatar">
+                    {{ getUserInitials(receiver.receiverId.name) }}
+                  </div>
+                  <span>{{ receiver.receiverId.name || receiver.receiverId.email || 'Unknown User' }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="message-footer">
+            <button class="btn btn-outline delete-btn" (click)="deleteText(item._id, 'sent')" [disabled]="loadingSharedByMe">
+              <i class="fas fa-trash-alt"></i> Delete
+            </button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

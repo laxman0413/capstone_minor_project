@@ -1,0 +1,156 @@
+<div class="support-dashboard">
+  <!-- Left Section - Create Ticket Form and Ticket List -->
+  <div class="tickets-container">
+    <div class="card create-ticket-card">
+      <h2 class="card-title">Create Support Ticket</h2>
+      <div class="form-group">
+        <label for="ticketIssue" class="form-label">Describe your issue</label>
+        <textarea 
+          id="ticketIssue" 
+          class="form-control" 
+          [(ngModel)]="newTicket.issue" 
+          placeholder="Please describe your issue in detail..."
+          rows="3"
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <label for="ticketPriority" class="form-label">Priority</label>
+        <div class="select-wrapper">
+          <select id="ticketPriority" class="form-control" [(ngModel)]="newTicket.priority">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+          <div class="tooltip priority-tooltip">
+            <i class="fas fa-info-circle"></i>
+            <span class="tooltip-text">
+              Low: General questions<br>
+              Medium: Issues affecting workflow<br>
+              High: Critical problems
+            </span>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary" [disabled]="!newTicket.issue.trim() || loading" (click)="createTicket()">
+        <i class="fas fa-plus"></i> Create Ticket
+      </button>
+    </div>
+    
+    <div class="card1 tickets-list-card">
+      <h2 class="card-title">Your Tickets</h2>
+      
+      <div *ngIf="loading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Loading tickets...</p>
+      </div>
+      
+      <div *ngIf="error && !loading" class="error-message">
+        <i class="fas fa-exclamation-circle"></i> {{ error }}
+      </div>
+      
+      <div *ngIf="tickets.length === 0 && !loading" class="no-tickets">
+        <i class="fas fa-ticket-alt"></i>
+        <p>No tickets yet. Create one to get support.</p>
+      </div>
+      
+      <div class="ticket-list">
+        <div class="ticket-list-item" *ngFor="let ticket of tickets" 
+             [class.selected]="selectedTicket?._id === ticket._id"
+             [class.resolved]="ticket.status === 'resolved'">
+          <div class="ticket-header">
+            <span class="ticket-id">#{{ticket._id.substring(0, 8)}}</span>
+            <span [class]="'status-badge status-' + ticket.status">{{ticket.status}}</span>
+          </div>
+          <div class="ticket-content">
+            <p class="ticket-issue">{{ticket.issue}}</p>
+          </div>
+          <div class="ticket-footer">
+            <span [class]="'priority-badge priority-' + ticket.priority">{{ticket.priority}}</span>
+            <span class="ticket-date">{{ticket.createdAt | date:'short'}}</span>
+          </div>
+          <button class="btn btn-open-ticket" (click)="selectTicket(ticket)">
+            <i class="fas fa-folder-open"></i> Open
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Section - Chat -->
+  <div class="chat-container" *ngIf="selectedTicket; else selectTicketPrompt">
+    <div class="card">
+      <div class="chat-header">
+        <div class="ticket-info">
+          <h2 class="chat-title">
+            Ticket #{{ selectedTicket._id.substr(selectedTicket._id.length - 6) }}
+            <span class="ticket-status" [class]="getStatusClass(selectedTicket.status)">
+              {{ selectedTicket.status }}
+            </span>
+          </h2>
+          <p class="issue-text">{{ selectedTicket.issue }}</p>
+        </div>
+      </div>
+
+      <div class="messages-container fixed-height">
+        <div *ngIf="selectedTicket.messages.length === 0" class="no-messages">
+          <i class="fas fa-comments"></i>
+          <p>No messages yet. Start the conversation!</p>
+        </div>
+        
+        <div class="messages" #messageContainer>
+          <div *ngFor="let message of selectedTicket.messages"
+              class="message"
+              [class.user-message]="message.sender === 'user'"
+              [class.admin-message]="message.sender === 'admin'">
+            <div class="message-avatar">
+              <i [class]="message.sender === 'user' ? 'fas fa-user' : 'fas fa-headset'"></i>
+            </div>
+            <div class="message-content">
+              <div class="message-header">
+                <span class="sender-name">{{ message.sender === 'user' ? 'You' : 'Support Agent' }}</span>
+                <span class="message-time">{{ message.timestamp | date:'short' }}</span>
+              </div>
+              <div class="message-text">{{ message.message }}</div>
+            </div>
+          </div>
+          <!-- Invisible element to help with scrolling -->
+          <div #scrollAnchor></div>
+        </div>
+      </div>
+
+      <div class="message-input-container" [class.disabled]="isTicketResolved()">
+        <div class="input-wrapper">
+          <textarea 
+            class="message-input" 
+            [(ngModel)]="newMessage" 
+            [placeholder]="isTicketResolved() ? 'Chat disabled - Ticket resolved' : 'Type your message...'"
+            [disabled]="isTicketResolved()"
+            (keydown.enter)="$event.preventDefault(); sendMessage()"
+            rows="2"
+          ></textarea>
+          <button 
+            class="btn btn-primary send-button" 
+            [disabled]="!newMessage.trim() || isTicketResolved()"
+            (click)="sendMessage()">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+        <div class="ticket-resolved-message" *ngIf="isTicketResolved()">
+          <i class="fas fa-check-circle"></i> This ticket has been resolved. Create a new ticket if you need further assistance.
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <ng-template #selectTicketPrompt>
+    <div class="chat-container empty-state">
+      <div class="card empty-card">
+        <div class="empty-content">
+          <i class="fas fa-comments"></i>
+          <h3>Select a ticket to view the conversation</h3>
+          <p>Choose a ticket from the list on the left or create a new one to get started.</p>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

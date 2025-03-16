@@ -1,0 +1,45 @@
+<div class="container">
+    <div class="sign-in">
+        <h2 class="text-center">Sign In</h2>
+        <form #signInForm="ngForm" (ngSubmit)="onSubmit()">
+            <!-- Email Field -->
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" 
+                       name="email" 
+                       id="email" 
+                       [(ngModel)]="enteredEmail" 
+                       required 
+                       email 
+                       #emailCtrl="ngModel">
+                <div *ngIf="emailCtrl.invalid && emailCtrl.touched" class="error-text">
+                    <span *ngIf="emailCtrl.errors?.['required']">Email is required.</span>
+                    <span *ngIf="emailCtrl.errors?.['email']">Enter a valid email.</span>
+                </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" 
+                       name="password" 
+                       id="password" 
+                       [(ngModel)]="enteredPassword" 
+                       required 
+                       minlength="6" 
+                       #passwordCtrl="ngModel">
+                <div *ngIf="passwordCtrl.invalid && passwordCtrl.touched" class="error-text">
+                    <span *ngIf="passwordCtrl.errors?.['required']">Password is required.</span>
+                    <span *ngIf="passwordCtrl.errors?.['minlength']">Password must be at least 8 characters.</span>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn" [disabled]="signInForm.invalid">Sign In</button>
+        </form>
+        <div class="redirect">
+            <span>Don't have an account? <a routerLink="/sign-up">Sign Up</a></span>
+        </div>
+    </div>
+</div>
+

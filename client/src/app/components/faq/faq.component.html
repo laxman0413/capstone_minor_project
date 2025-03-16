@@ -1,0 +1,19 @@
+
+<div class="faq-container">
+    <div class="faq-left">
+      <img src="assets/faqImg.png" alt="FAQ Image">
+    </div>
+  
+    <div class="faq-right">
+      <div class="faq-box" *ngFor="let faq of faqs; let i = index">
+        <div class="faq-header" (click)="toggleFaq(i)">
+          <h3>{{ faq.question }}</h3>
+          <span [class.open]="faq.isOpen"><img src="assets/down-arrow.png" alt=">" width="30px" ></span>
+        </div>
+        <div class="faq-body" *ngIf="faq.isOpen">
+          <p>{{ faq.answer }}</p>
+        </div>
+      </div>
+    </div>
+</div>
+

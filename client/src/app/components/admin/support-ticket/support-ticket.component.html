@@ -1,0 +1,85 @@
+<div class="admin-dashboard">
+  <!-- Left Section - Tickets List -->
+  <div class="tickets-section">
+    <h2>Support Tickets</h2>
+    
+    <div class="tickets-list">
+      <div *ngIf="loading" class="loading">Loading tickets...</div>
+      <div *ngIf="error" class="error-message">{{ error }}</div>
+
+      <div *ngFor="let ticket of tickets" 
+           class="ticket-list-item"
+           [class.selected]="selectedTicket?._id === ticket._id"
+           [class.resolved]="ticket.status === 'resolved'"
+           (click)="selectTicket(ticket)">
+        <div class="ticket-header">
+          <span class="ticket-id">#{{ticket._id.substring(0, 8)}}</span>
+          <span [class]="getPriorityClass(ticket.priority)" class="priority-badge">{{ticket.priority}}</span>
+        </div>
+        <div class="ticket-content">
+          <p class="ticket-issue">{{ticket.issue}}</p>
+          <p class="ticket-user">{{displayUserInfo(ticket)}}</p>
+        </div>
+        <div class="ticket-footer">
+          <span class="ticket-date">{{ticket.createdAt | date:'short'}}</span>
+          <span [class]="'status-badge status-' + ticket.status">{{ticket.status}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Section - Chat -->
+  <div class="chat-section" *ngIf="selectedTicket">
+    <div class="chat-header">
+      <div class="ticket-info">
+        <h3>Ticket #{{ selectedTicket._id }}</h3>
+        <div class="user-info">
+          {{ displayUserInfo(selectedTicket) }}
+        </div>
+        <div class="status-controls">
+          <span class="current-status" [class]="getStatusClass(selectedTicket.status)">
+            {{ selectedTicket.status }}
+          </span>
+          <select 
+            [(ngModel)]="selectedTicket.status" 
+            (change)="updateTicketStatus(selectedTicket._id, selectedTicket.status)"
+            [disabled]="selectedTicket.status === 'resolved'">
+            <option value="open">Open</option>
+            <option value="in-progress">In Progress</option>
+            <option value="resolved">Resolved</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="messages" #messageContainer>
+      <div *ngIf="selectedTicket.messages.length === 0" class="no-messages">
+        No messages yet
+      </div>
+      
+      <div *ngFor="let message of selectedTicket.messages"
+           class="message"
+           [class.user-message]="message.sender === 'user'"
+           [class.admin-message]="message.sender === 'admin'">
+        <div class="message-content">
+          <span class="sender-label">{{ message.sender === 'user' ? getUserName(selectedTicket) : 'Admin' }}</span>
+          {{ message.message }}
+        </div>
+        <div class="message-time">{{ message.timestamp | date:'short' }}</div>
+      </div>
+    </div>
+
+    <div class="message-input" [class.disabled]="isTicketResolved()">
+      <input type="text" 
+             [(ngModel)]="newMessage" 
+             (keyup.enter)="sendMessage()"
+             [placeholder]="isTicketResolved() ? 'Chat disabled - Ticket resolved' : 'Type your message...'"
+             [disabled]="isTicketResolved()">
+      <button 
+        (click)="sendMessage()" 
+        [disabled]="!newMessage.trim() || isTicketResolved()">
+        Send
+      </button>
+    </div>
+  </div>
+</div>

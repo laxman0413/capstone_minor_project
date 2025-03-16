@@ -1,0 +1,26 @@
+`
+<div class="container">
+  <div #fileDropRef class="drop-container" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)">
+    <div class="icon-container">
+      <label class="upload-label">
+        <img src="assets/browse.png" alt="browse" class="upload-icon" />
+        <input type="file" (change)="onFileSelect($event)" hidden />
+      </label>
+    </div>
+
+    <div class="icon-container">
+      <label class="upload-label">
+        <img src="assets/drive.png" alt="drive" class="upload-icon" />
+      </label>
+    </div>
+
+    <div class="icon-container">
+      <label class="upload-label">
+        <img src="assets/dropbox.png" alt="dropbox" class="upload-icon" />
+      </label>
+    </div>
+
+    <p class="drop-text">Or Drag & Drop your files here</p>
+  </div>
+</div>

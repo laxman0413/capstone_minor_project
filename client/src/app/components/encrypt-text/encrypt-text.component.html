@@ -1,0 +1,81 @@
+<div class="container">
+  <!-- Left Section - Encryption -->
+  <div class="encrypt-section">
+    <h2>Encrypt Message</h2>
+    
+    <!-- User Search -->
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        (input)="filterUsers()" 
+        placeholder="Search users (max 3 recipients)..."
+        class="search-input"
+      >
+      
+      <div class="users-list" *ngIf="searchTerm && filteredUsers.length > 0">
+        <div 
+          *ngFor="let user of filteredUsers" 
+          (click)="selectUser(user)"
+          class="user-item"
+          [class.disabled]="selectedUsers.length >= maxRecipients"
+        >
+          <span>{{user.name}}</span>
+          <small>{{user.email}}</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Selected Users -->
+    <div class="selected-users" *ngIf="selectedUsers.length > 0">
+      <h3>Selected Recipients:</h3>
+      <div class="selected-user-chips">
+        <div class="user-chip" *ngFor="let user of selectedUsers">
+          <span>{{user.name}}</span>
+          <button class="remove-user" (click)="removeUser(user)">×</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message Input -->
+    <div class="message-box">
+      <textarea 
+        [(ngModel)]="text" 
+        placeholder="Enter your message..."
+        rows="4"
+      ></textarea>
+      
+      <button 
+        (click)="handleEncrypt()" 
+        [disabled]="!text || selectedUsers.length === 0 || loading"
+        class="encrypt-btn"
+      >
+        {{loading ? 'Encrypting...' : 'Encrypt Message'}}
+      </button>
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-message" *ngIf="error">
+      {{error}}
+    </div>
+
+    <!-- Encrypted Result -->
+    <div class="result-box" *ngIf="encryptedMessage">
+      <h3>Encrypted Message:</h3>
+      <p class="encrypted-text">{{encryptedMessage}}</p>
+      <button 
+        (click)="decrypt()"
+        [disabled]="loading"
+        class="decrypt-btn"
+      >
+        Decrypt
+      </button>
+    </div>
+
+    <!-- Decrypted Result -->
+    <div class="result-box" *ngIf="decryptedMessage">
+      <h3>Decrypted Message:</h3>
+      <p class="decrypted-text">{{decryptedMessage}}</p>
+    </div>
+  </div>
+</div>

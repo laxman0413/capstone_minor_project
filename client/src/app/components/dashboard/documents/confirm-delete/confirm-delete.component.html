@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>Confirm Deletion</h2>
+
+<mat-dialog-content>
+  <p>To delete <strong>{{ data.fileName }}</strong>, please type <strong>"DELETE"</strong> below:</p>
+  <mat-form-field appearance="outline">
+    <input matInput [(ngModel)]="userInput" (ngModelChange)="checkInput()" placeholder="Type DELETE to confirm" />
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button class="cancel-button" (click)="closeDialog()">Cancel</button>
+  <button 
+  class="delete-button" 
+  [disabled]="!isValidInput" 
+  (click)="confirmDelete()">
+  Delete
+</button>
+
+</mat-dialog-actions>

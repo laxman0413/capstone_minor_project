@@ -1,0 +1,80 @@
+<div class="profile-container">
+  <div class="profile-card">
+    <!-- Profile Image with Enhanced Upload Flow -->
+    <div class="image-wrapper">
+      <div class="image-container">
+        <input type="file" (change)="onFileSelected($event)" hidden #fileInput accept="image/*" />
+        <img
+          [src]="imagePreview || user.profileImage || 'assets/profile.png'"
+          alt="Profile Picture"
+          class="profile-pic"
+        />
+      </div>
+      <div class="edit-icon" (click)="fileInput.click()">
+        <i class="fa fa-pencil"></i>
+      </div>
+    </div>
+    
+    <!-- Image Upload Preview Controls -->
+    <div *ngIf="imagePreview && !user.profileImage.includes(imagePreview)" class="image-preview-controls">
+      <p class="preview-text">Preview of new profile image</p>
+      <div class="image-actions">
+        <button (click)="uploadProfileImage()" class="btn-save-image">
+          <i class="fa fa-check"></i> Save Image
+        </button>
+        <button (click)="cancelImageUpload()" class="btn-cancel-image">
+          <i class="fa fa-times"></i> Cancel
+        </button>
+      </div>
+    </div>
+    
+    <!-- User Info Section -->
+    <div class="user-info">
+      <h2 class="user-name">{{ user.name }}</h2>
+      <p class="user-email">{{ user.email }}</p>
+      <p class="user-phone">{{ user.phone }}</p>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button (click)="editMode = !editMode" class="btn-edit">
+        <i class="fa fa-user-edit"></i> {{ editMode ? 'Cancel' : 'Edit Profile' }}
+      </button>
+      <button (click)="peditMode = !peditMode" class="btn-password">
+        <i class="fa fa-key"></i> {{ peditMode ? 'Cancel' : 'Change Password' }}
+      </button>
+    </div>
+    
+    <!-- Edit Profile Form -->
+    <div *ngIf="editMode" class="edit-form">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" [(ngModel)]="user.name" placeholder="Enter name" />
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="text" id="phone" [(ngModel)]="user.phone" placeholder="Enter phone" />
+      </div>
+      <button (click)="updateProfile()" class="btn-save">
+        <i class="fa fa-check"></i> Save Changes
+      </button>
+    </div>
+
+    <!-- Change Password  -->
+
+    <div *ngIf="peditMode" class="edit-form">
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" [(ngModel)]="enteredPassword" placeholder="Enter Password" />
+      </div>
+      <div class="form-group">
+        <label for="password">Retype Password</label>
+        <input type="password" id="password" [(ngModel)]="reEnteredPassword" placeholder="ReEnter Password" />
+      </div>
+      <button (click)="changePassword()" class="btn-save">
+        <i class="fa fa-check"></i> Save Changes
+      </button>
+    </div>
+
+  </div>
+</div>

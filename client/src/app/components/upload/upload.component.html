@@ -1,0 +1,130 @@
+<div class="upload-wrapper">
+  <div class="page-header">
+    <h1 class="page-title">Document Masking</h1>
+    <p class="page-description">Upload and mask sensitive information in your documents securely</p>
+  </div>
+
+  <div class="upload-box">
+    <div class="upload">
+      <div class="header-box">
+        <h4 class="header-content" *ngIf="!isSuccess">SELECT YOUR FILES</h4>
+        <a routerLink="/guide" class="guide-link" *ngIf="!isSuccess">
+          <i class="fas fa-book"></i> View Upload Guide
+        </a>
+        <h4 class="header-content" *ngIf="isSuccess">MASKED IMAGE</h4>
+      </div>
+      
+      <div class="upload-content" *ngIf="!isSuccess">
+        <div class="document-type-wrapper">
+          <label for="documentType" class="label-dropdown flex items-center">
+            Select Document Type:
+            <span class="info-button" (mouseenter)="showTooltip = true" (mouseleave)="showTooltip = false" (click)="showTooltip = !showTooltip">
+              <i class="fas fa-info-circle"></i>
+            </span>
+            <span class="tooltip" *ngIf="showTooltip">
+              <pre>Choose the document type 
+you want to upload.</pre>
+              <pre>This can enhance the level 
+of masking the data.</pre>
+            </span>
+          </label>
+          
+          <select id="documentType" class="document-type-dropdown" [(ngModel)]="selectedDocumentType">
+            <option value="" disabled selected>Select Document Type</option>
+            <option value="adhaar">Aadhaar Card</option>
+            <option value="pan">PAN Card</option>
+            <option value="driving_license">Driving License</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        
+        <app-dropfileinput (fileChange)="onFileChange($event)"></app-dropfileinput>
+        
+        <div class="toggle-container" *ngIf="isLogin">
+          <div class="labelForSwitch">
+            <label class="toggle-label">Save Masked Document?</label>
+            <span class="info-icon" (mouseenter)="showTooltip2" (mouseleave)="showTooltip2 = false" (click)="showTooltip2 = !showTooltip2">
+              <i class="fas fa-info-circle"></i>
+            </span>
+            <span class="tooltip" *ngIf="showTooltip2">
+              <pre>We securely store the masked document with AES-256 encryption.</pre>
+            </span>
+          </div>
+          
+          <label class="switch">
+            <input type="checkbox" [(ngModel)]="saveMaskedDocument">
+            <span class="slider"></span>
+          </label>
+        </div>
+        
+        <div class="file-list" *ngIf="file">
+          <div class="file-item">
+            <div class="file-info">
+              <i class="fas fa-file-alt file-icon"></i>
+              <div class="file-details">
+                <strong>{{ file.name }}</strong>
+                <span class="file-size">{{ (file.size / 1024).toFixed(2) }} KB</span>
+              </div>
+            </div>
+            <button class="remove-button" (click)="removeFile()">
+              <i class="fas fa-times"></i>
+            </button>
+            <div class="preview-container" *ngIf="fileUrl">
+              <div class="preview-box">
+                <img [src]="fileUrl" alt="Masked Preview" class="preview-image" />
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <button class="upload-button" [disabled]="!file || isUploading" (click)="uploadAndFetchMaskedFile()">
+          <i class="fas fa-mask" *ngIf="!isUploading"></i>
+          <span *ngIf="!isUploading">Mask Document</span>
+          <span *ngIf="isUploading" class="spinner">
+            <span class="spinner-inner"></span>
+          </span>
+        </button>
+      </div>
+      
+      <div class="success-screen" *ngIf="isSuccess">
+        <div class="file-list" *ngIf="file">
+          <div class="file-item">
+            <div class="file-info">
+              <i class="fas fa-file-alt file-icon"></i>
+              <div class="file-details">
+                <strong>{{ file.name }}</strong>
+                <span class="file-size">{{ (file.size / 1024).toFixed(2) }} KB</span>
+              </div>
+            </div>
+            <button class="remove-button" (click)="removeFile()">
+              <i class="fas fa-times"></i>
+            </button>
+            <div class="preview-container" *ngIf="fileUrl">
+              <div class="preview-box">
+                <img [src]="fileUrl" alt="Masked Preview" class="preview-image" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="success-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <h3>File Masked Successfully!</h3>
+        <p>Your file has been processed and is ready for download.</p>
+
+        <button class="download-button" (click)="downloadMaskedFile()">
+          <i class="fas fa-download"></i> Download Masked File
+        </button>
+
+        <button class="back-button" (click)="removeFile()">
+          <i class="fas fa-arrow-left"></i> Upload Another File
+        </button>
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
+      </div>
+    </div>
+  </div>
+</div>

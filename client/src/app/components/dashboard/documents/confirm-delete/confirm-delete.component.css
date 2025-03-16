@@ -1,0 +1,70 @@
+/* confirm-delete.component.css */
+
+.mat-dialog-container {
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  h2.mat-dialog-title {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .mat-dialog-content {
+    margin-bottom: 20px;
+  }
+  
+  .mat-dialog-content p {
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  
+  .mat-dialog-content strong {
+    font-weight: 500;
+  }
+  
+  .mat-form-field {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  
+  .mat-input-element {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .mat-dialog-actions {
+    justify-content: flex-end;
+    padding: 0;
+    margin: 0;
+    gap: 8px;
+  }
+  
+  button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: normal;
+    cursor: pointer;
+  }
+  
+  .cancel-button {
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    color: #333;
+  }
+  
+  .delete-button {
+    background: #d32f2f;
+    border: 1px solid #d32f2f;
+    color: white;
+  }
+  
+  .delete-button:disabled {
+    background: #8a3535;
+    border: 1px solid #ddd;
+    color: #999;
+    cursor: not-allowed;
+  }

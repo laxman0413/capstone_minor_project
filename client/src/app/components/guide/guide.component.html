@@ -1,0 +1,105 @@
+<!-- Standalone page container -->
+<div class="guide-page-container" *ngIf="isStandalonePage">
+  <div class="guide-page-content">
+    <div class="page-header">
+      <a routerLink="/" class="back-link">← Back to Home</a>
+      <h1 class="page-title">Document Upload Guide</h1>
+      <p class="page-description">Follow these steps to ensure your documents are properly uploaded and processed in our secure Document Management System.</p>
+    </div>
+    
+    <div class="guide-content">
+      <div class="step-content">
+        <h3>{{ steps[currentStep - 1].title }}</h3>
+        <p>{{ steps[currentStep - 1].content }}</p>
+        <div class="step-image">
+          <img [src]="steps[currentStep - 1].image" [alt]="steps[currentStep - 1].title">
+        </div>
+      </div>
+      
+      <div class="navigation-controls">
+        <button 
+          class="nav-button" 
+          [class.disabled]="currentStep === 1"
+          (click)="prevStep()">
+          Previous
+        </button>
+        
+        <div class="step-dots">
+          <span 
+            *ngFor="let step of steps; let i = index" 
+            class="dot"
+            [class.active]="currentStep === i + 1"
+            (click)="currentStep = i + 1">
+          </span>
+        </div>
+        
+        <button 
+          class="nav-button"
+          *ngIf="currentStep < totalSteps"
+          (click)="nextStep()">
+          Next
+        </button>
+        <button 
+          class="nav-button complete"
+          *ngIf="currentStep === totalSteps"
+          (click)="completeGuide()">
+          Complete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Dialog overlay for modal mode -->
+<div class="dialog-overlay" *ngIf="show && !isStandalonePage" (click)="closeDialog()">
+  <div class="dialog-content" (click)="$event.stopPropagation()">
+    <button class="close-button" (click)="closeDialog()">×</button>
+    
+    <div class="dialog-header">
+      <h2>Document Upload Guide</h2>
+      <div class="step-indicator">
+        Step {{ currentStep }} of {{ totalSteps }}
+      </div>
+    </div>
+
+    <div class="dialog-body">
+      <div class="step-content">
+        <h3>{{ steps[currentStep - 1].title }}</h3>
+        <p>{{ steps[currentStep - 1].content }}</p>
+        <div class="step-image">
+          <img [src]="steps[currentStep - 1].image" [alt]="steps[currentStep - 1].title">
+        </div>
+      </div>
+    </div>
+
+    <div class="dialog-footer">
+      <button 
+        class="nav-button" 
+        [class.disabled]="currentStep === 1"
+        (click)="prevStep()">
+        Previous
+      </button>
+      
+      <div class="step-dots">
+        <span 
+          *ngFor="let step of steps; let i = index" 
+          class="dot"
+          [class.active]="currentStep === i + 1">
+        </span>
+      </div>
+      
+      <button 
+        class="nav-button"
+        *ngIf="currentStep < totalSteps"
+        (click)="nextStep()">
+        Next
+      </button>
+      <button 
+        class="nav-button complete"
+        *ngIf="currentStep === totalSteps"
+        (click)="completeGuide()">
+        Got it!
+      </button>
+    </div>
+  </div>
+</div>

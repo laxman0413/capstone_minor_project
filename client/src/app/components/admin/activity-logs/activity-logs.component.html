@@ -1,0 +1,85 @@
+<div class="activity-logs-container">
+  <div class="activity-logs-header">
+    <h2>User Activity Logs</h2>
+    
+    <div class="filter-controls">
+      <div class="filter-group">
+        <input 
+          type="text" 
+          [(ngModel)]="filterUserId" 
+          placeholder="Filter by User ID" 
+          class="filter-input"
+        >
+        <button (click)="applyFilter()" class="filter-button">Filter</button>
+        <button (click)="clearFilter()" class="clear-button">Clear</button>
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="loading" class="loading">
+    <p>Loading activity logs...</p>
+  </div>
+  
+  <div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+  </div>
+  
+  <div *ngIf="!loading && !error">
+    <div *ngIf="activityLogs.length === 0" class="no-logs">
+      <p>No activity logs found.</p>
+    </div>
+    
+    <div *ngIf="activityLogs.length > 0" class="activity-logs-list">
+      <div *ngFor="let log of activityLogs" class="activity-log-item" [ngClass]="getActivityTypeClass(log.type)">
+        <div class="activity-icon">
+          <i [class]="getActivityTypeIcon(log.type)"></i>
+        </div>
+        
+        <div class="activity-content">
+          <div class="activity-header">
+            <span class="activity-user">{{ getUserName(log.userId) }}</span>
+            <span class="activity-type">{{ log.type }}</span>
+            <span class="activity-time">{{ formatDate(log.createdAt) }}</span>
+          </div>
+          
+          <div class="activity-text">{{ log.text }}</div>
+          
+          <div *ngIf="log.documentId" class="activity-document">
+            Document: {{ log.documentId.originalName }} ({{ log.documentId.documentType }})
+          </div>
+          
+          <div *ngIf="log.metadata" class="activity-metadata">
+            <div *ngFor="let item of log.metadata | keyvalue" class="metadata-item">
+              <span class="metadata-key">{{ item.key }}:</span>
+              <span class="metadata-value">{{ item.value }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="pagination-controls">
+      <div class="pagination-info">
+        Showing {{ activityLogs.length }} of {{ totalLogs }} logs | Page {{ currentPage }} of {{ totalPages }}
+      </div>
+      
+      <div class="pagination-buttons">
+        <button 
+          (click)="prevPage()" 
+          [disabled]="currentPage === 1"
+          class="pagination-button"
+        >
+          Previous
+        </button>
+        
+        <button 
+          (click)="nextPage()" 
+          [disabled]="currentPage === totalPages"
+          class="pagination-button"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+</div> 

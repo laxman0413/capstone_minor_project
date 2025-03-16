@@ -1,0 +1,12 @@
+.faq-container{
+  display: flex;
+  padding: 5%;
+}
+.faq-right{
+  padding-left: 5%;
+}
+.faq-header{
+  display: flex;
+  align-items: center;
+  align-content: center;
+}

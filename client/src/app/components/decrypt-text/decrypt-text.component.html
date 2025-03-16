@@ -1,0 +1,57 @@
+<div class="container">
+  <!-- Left Section: Shared Messages -->
+  <div class="left-panel">
+    <h3>Shared With Me</h3>
+    <ul *ngIf="getPaginatedSharedWithMe().length > 0; else noData">
+      <li *ngFor="let item of getPaginatedSharedWithMe()" 
+          [class.selected]="item === selectedMessage"
+          (click)="selectMessage(item)">
+        <div>
+          <p><strong>Encrypted Text:</strong> {{ item.encryptedText }}</p>
+          <p><strong>Shared By:</strong> {{ item.userId.name }}</p>
+          <p><strong>Created At:</strong> {{ item.createdAt | date:'short' }}</p>
+        </div>
+      </li>
+    </ul>
+    <ng-template #noData>
+      <p>No shared messages.</p>
+    </ng-template>
+
+    <!-- Pagination Controls -->
+    <div class="pagination">
+      <button (click)="prevPage()" [disabled]="sharedWithMePage === 1">Previous</button>
+      <span>Page {{ sharedWithMePage }}</span>
+      <button (click)="nextPage()" [disabled]="sharedWithMePage * itemsPerPage >= sharedWithMe.length">Next</button>
+    </div>
+  </div>
+
+  <!-- Right Section: Encryption / Decryption -->
+  <div class="right-panel">
+    <!-- Error Message -->
+    <div class="error-message" *ngIf="error">
+      {{ error }}
+    </div>
+
+    <!-- Encrypted Result -->
+    <div class="result-box" *ngIf="selectedMessage">
+      <h3>Encrypted Message:</h3>
+      <p class="encrypted-text">{{ selectedMessage.encryptedText }}</p>
+      <button (click)="decrypt()" [disabled]="loading" class="decrypt-btn">
+        {{ loading ? 'Decrypting...' : 'Decrypt' }}
+      </button>
+    </div>
+
+    <!-- Decrypted Result -->
+    <div class="result-box" *ngIf="decryptedMessage">
+      <h3>Decrypted Message:</h3>
+      <p class="decrypted-text">{{ decryptedMessage }}</p>
+      <button 
+        *ngIf="decryptedMessage" 
+        class="copy-button" 
+        (click)="copyToClipboard()" 
+        title="Copy to clipboard">
+        <span class="copy-icon">📋</span> Copy
+      </button>
+    </div>
+  </div>
+</div>

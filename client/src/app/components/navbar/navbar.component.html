@@ -1,0 +1,107 @@
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <div class="container">
+    <div class="logo">
+      <a routerLink="/" class="tooltip">
+        <img
+          src="assets/logo.png"
+          alt="DMS Logo"
+          class="logo-image"
+        />
+        <span class="tooltip-text">Home</span>
+      </a>
+    </div>
+    
+    <button class="mobile-menu-toggle hide-desktop" aria-label="Toggle navigation menu" (click)="toggleMobileMenu()">
+      <i class="fas fa-bars"></i>
+    </button>
+    
+    <div class="nav-container" [class.show-mobile-menu]="showMobileMenu">
+      <ul class="nav-links" role="menubar">
+        <li *ngFor="let item of navigation" role="none" >
+          <a 
+            *ngIf="item.isDisplay"
+            [routerLink]="item.href" 
+            [ngClass]="{ 'active': isCurrentRoute(item.href) }"
+            class="tooltip"
+            role="menuitem"
+            (click)="toggleMobileMenu()"
+          >
+            <i class="{{item.icon}}" aria-hidden="true" ></i>
+            <span >{{ item.name }}</span>
+            <span class="tooltip-text">{{ item.description }}</span>
+          </a>
+        </li>
+      </ul>
+      
+      <div class="profile-section">
+        <ul class="nav-links">
+          <li role="none">
+            <a routerLink="/faq" class="tooltip" role="menuitem">
+              <i class="fas fa-question-circle" aria-hidden="true"></i>
+              <span>FAQ</span>
+              <span class="tooltip-text">Frequently Asked Questions</span>
+            </a>
+          </li>
+        </ul>
+        
+        <div class="tooltip notification-bell" *ngIf="isLogin">
+          <button class="btn-icon" aria-label="Notifications" (click)="toggleNotifications()">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" *ngIf="notificationCount > 0">{{ notificationCount }}</span>
+          </button>
+          <span class="tooltip-text">Notifications</span>
+          
+          <!-- Notifications dropdown -->
+          <div class="notifications-dropdown" [class.show]="showNotifications" *ngIf="isLogin">
+            <div class="notifications-header">
+              <h3>Notifications</h3>
+              <button class="btn-text" (click)="markAllAsRead()" *ngIf="notifications.length > 0">
+                Mark all as read
+              </button>
+            </div>
+            
+            <div class="notifications-body" *ngIf="notifications.length > 0; else noNotifications">
+              <div class="notification-item" *ngFor="let notification of notifications" [class.unread]="!notification.read">
+                <div class="notification-icon">
+                  <i class="{{notification.icon}}" aria-hidden="true"></i>
+                </div>
+                <div class="notification-content">
+                  <p class="notification-text">{{ notification.message }}</p>
+                  <p class="notification-time">{{ notification.time | date:'short' }}</p>
+                </div>
+              </div>
+            </div>
+            
+            <ng-template #noNotifications>
+              <div class="no-notifications">
+                <i class="fas fa-bell-slash"></i>
+                <p>No new notifications</p>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+        
+        <div class="user-profile" *ngIf="isLogin">
+          <div class="tooltip">
+            <img 
+              src="assets/profile.png" 
+              alt="User profile" 
+              routerLink="/profile" 
+              class="profile-image"
+            />
+            <span class="tooltip-text">My Profile</span>
+          </div>
+          <button class="btn btn-outline sign-out" (click)="signOut()">
+            <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+            <span>Sign out</span>
+          </button>
+        </div>
+        
+        <a *ngIf="!isLogin" routerLink="/sign-in" class="btn btn-primary sign-in">
+          <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+          <span>Sign in</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>

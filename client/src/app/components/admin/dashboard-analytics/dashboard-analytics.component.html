@@ -1,0 +1,90 @@
+<div class="analytics-dashboard">
+  <div *ngIf="loading" class="loading">
+    <p>Loading analytics data...</p>
+  </div>
+  
+  <div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+  </div>
+  
+  <div *ngIf="!loading && !error" class="analytics-content">
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+      <div class="card">
+        <div class="card-icon users-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="card-content">
+          <h3>Total Users</h3>
+          <p class="card-value">{{ totalUsers }}</p>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-icon documents-icon">
+          <i class="fas fa-file-alt"></i>
+        </div>
+        <div class="card-content">
+          <h3>Total Documents</h3>
+          <p class="card-value">{{ totalDocuments }}</p>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-icon masked-icon">
+          <i class="fas fa-mask"></i>
+        </div>
+        <div class="card-content">
+          <h3>Masked Documents</h3>
+          <p class="card-value">{{ maskedDocuments }}</p>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-icon shared-icon">
+          <i class="fas fa-share-alt"></i>
+        </div>
+        <div class="card-content">
+          <h3>Shared Texts</h3>
+          <p class="card-value">{{ sharedTexts }}</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Charts Grid - Only keep the most important charts -->
+    <div class="charts-grid">
+      <div class="chart-container">
+        <canvas #userGrowthChart></canvas>
+      </div>
+      
+      <div class="chart-container">
+        <canvas #documentUploadsChart></canvas>
+      </div>
+      
+      <div class="chart-container">
+        <canvas #documentTypesChart></canvas>
+      </div>
+    </div>
+    
+    <!-- Top Active Users Table -->
+    <div class="top-users-container" *ngIf="analytics?.topActiveUsers?.length">
+      <h3>Top Active Users</h3>
+      <table class="top-users-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Email</th>
+            <th>Documents</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let userStat of analytics?.topActiveUsers">
+            <td>{{ userStat?.user?.name }}</td>
+            <td>{{ userStat?.user?.email }}</td>
+            <td>{{ userStat?.documentCount }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div> 

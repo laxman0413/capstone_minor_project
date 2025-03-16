@@ -1,0 +1,12 @@
+<div class="root">
+    <div *ngIf="!isErrorPage && !isAdmin">
+        <app-navbar></app-navbar>
+      </div>
+      
+      <router-outlet></router-outlet>
+      
+      <div *ngIf="!isErrorPage && !isAdmin">
+        <app-footer></app-footer>
+      </div>
+      
+</div>

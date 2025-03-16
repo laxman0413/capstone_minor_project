@@ -1,0 +1,30 @@
+<div class="admin-dashboard">
+  <div class="dashboard-header">
+    <h1>Admin Dashboard</h1>
+    <div class="header-actions">
+      <button class="sign-out" (click)="signOut()">Sign out</button>
+    </div>
+  </div>
+  
+  <div class="dashboard-content">
+    <!-- Main content area with grid layout -->
+    <div class="main-content">
+      <!-- Analytics Section -->
+      <div class="analytics-section">
+        <h2>Analytics</h2>
+        <app-dashboard-analytics></app-dashboard-analytics>
+      </div>
+      
+      <!-- Activity Logs Section -->
+      <div class="activity-logs-section">
+        <h2>Activity Logs</h2>
+        <app-activity-logs></app-activity-logs>
+      </div>
+    </div>
+    
+    <!-- Support Tickets Section -->
+    <div class="support-tickets-section">
+      <app-admin-support-ticket></app-admin-support-ticket>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+<div class="error-container" *ngIf="error">
+    <h1>{{ error.code }}</h1>
+    <h2>{{ error.message }}</h2>
+    <p *ngIf="error.description">{{ error.description }}</p>
+    <p>What you can do:</p>
+    <ul>
+      <li *ngFor="let step of error.steps">{{ step }}</li>
+    </ul>
+    <div class="button-container">
+      <a routerLink="/" class="button">Go to Homepage</a>
+    </div>
+</div>

@@ -1,0 +1,153 @@
+.container {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  height: calc(100vh - 4rem);
+  background-color: #f8f9fa;
+}
+
+.left-panel {
+  flex: 1;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+}
+
+.right-panel {
+  flex: 2;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+h3 {
+  color: #2c3e50;
+  margin: 0 0 1.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+li {
+  padding: 1rem;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+li:hover {
+  background-color: #f8f9fa;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+li.selected {
+  border-color: var(--primary-600);
+  background-color: #ebf5ff;
+}
+
+li p {
+  margin: 0.5rem 0;
+  color: #495057;
+}
+
+li p strong {
+  color: #2c3e50;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: var(--primary-800);
+  color: white;
+}
+
+button:hover:not(:disabled) {
+  background-color: var(--primary-700);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.decrypt-btn {
+  align-self: flex-start;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+}
+
+.error-message {
+  padding: 1rem;
+  background-color: #fee2e2;
+  border-left: 4px solid #ef4444;
+  border-radius: 6px;
+  color: #991b1b;
+}
+
+.result-box {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.result-box h3 {
+  color: #2c3e50;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.encrypted-text {
+  font-family: monospace;
+  background-color: #e9ecef;
+  padding: 1rem;
+  border-radius: 6px;
+  margin: 1rem 0;
+  word-break: break-all;
+}
+
+.decrypted-text {
+  background-color: #ebf5ff;
+  padding: 1rem;
+  border-radius: 6px;
+  margin: 1rem 0;
+  border-left: 4px solid var(--primary-600);
+}
+
+span {
+  color: #6c757d;
+}
