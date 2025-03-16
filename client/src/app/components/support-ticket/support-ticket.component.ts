@@ -40,8 +40,6 @@ interface UserTicket {
 })
 export class SupportTicketComponent implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild('messageContainer') private messageContainer!: ElementRef;
-  @ViewChild('scrollAnchor') private scrollAnchor!: ElementRef;
-
   tickets: UserTicket[] = [];
   newTicket = { issue: '', priority: 'low' as const };
   loading = false;
